@@ -12,7 +12,9 @@ Repositorio para la resolución de los ejercicios del Trabajo Práctico 1 de la 
 
 ## Requisitos y configuración del entorno
 
-El proyecto utiliza Python 3 y la librería Biopython. Debido a las políticas de entornos gestionados en Linux, se recomienda utilizar el entorno virtual local `.venv`.
+El proyecto utiliza Python 3 y la librería Biopython. Se recomienda utilizar el entorno virtual local `.venv`.
+
+### Linux y macOS
 
 1. Crear el entorno virtual si no existe:
    ```bash
@@ -26,6 +28,31 @@ El proyecto utiliza Python 3 y la librería Biopython. Debido a las políticas d
 
 3. Instalar las dependencias:
    ```bash
+   pip install -r requirements.txt
+   ```
+
+### Windows
+
+1. Crear el entorno virtual si no existe:
+   ```cmd
+   python -m venv .venv
+   ```
+
+2. Activar el entorno virtual:
+
+   En PowerShell:
+   ```powershell
+   .venv\Scripts\Activate.ps1
+   ```
+   Si PowerShell restringe la ejecución de scripts, habilitar el permiso con el comando `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`.
+
+   En el Símbolo del sistema clásico:
+   ```cmd
+   .venv\Scripts\activate.bat
+   ```
+
+3. Instalar las dependencias:
+   ```cmd
    pip install -r requirements.txt
    ```
 
