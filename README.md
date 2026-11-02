@@ -1,18 +1,18 @@
 # Trabajo práctico 1: Introducción a la bioinformática
 
-Repositorio para la resolución de los ejercicios del Trabajo Práctico 1 de la cátedra Introducción a la Bioinformática en la Universidad Tecnológica Nacional.
+Repositorio con la resolución completa de la Parte 1 del Trabajo Práctico de la cátedra Introducción a la Bioinformática en la Universidad Tecnológica Nacional.
+
+El documento detallado con toda la fundamentación biológica, las tablas de resultados y las interpretaciones se encuentra en [INFORME_AVANCE.md](INFORME_AVANCE.md).
 
 ## Enfermedad y gen seleccionados
 
-- **Patología:** Daltonismo parcial deutan, ceguera al color rojo-verde por defecto en el pigmento del cono verde.
-- **Entrada OMIM:** 303800.
-- **Gen:** OPN1MW, opsin 1 medium wave sensitive.
-- **Transcripto de referencia:** NM_000513.2 en formato GenBank.
-- **Proteína funcional:** NP_000504.1, opsina de 364 aminoácidos.
+- **Patología.** Daltonismo parcial deutan, alteración de la visión cromática rojo-verde por defecto en el fotopigmento de los conos verdes.
+- **Entrada OMIM.** 303800.
+- **Gen.** `OPN1MW`, opsin 1 medium wave sensitive, cromosoma Xq28.
+- **Transcripto de referencia.** `NM_000513.2` en formato GenBank, 1998 pares de bases.
+- **Proteína funcional.** `NP_000504.1`, opsina de 364 aminoácidos.
 
-## Requisitos y configuración del entorno
-
-El proyecto utiliza Python 3 y la librería Biopython. Se recomienda utilizar el entorno virtual local `.venv`.
+## Configuración del entorno
 
 ### Linux y macOS
 
@@ -21,9 +21,13 @@ El proyecto utiliza Python 3 y la librería Biopython. Se recomienda utilizar el
    python3 -m venv .venv
    ```
 
-2. Activar el entorno virtual:
+2. Activar el entorno virtual en Bash o Zsh:
    ```bash
    source .venv/bin/activate
+   ```
+   En terminal **fish**:
+   ```fish
+   source .venv/bin/activate.fish
    ```
 
 3. Instalar las dependencias:
@@ -56,39 +60,33 @@ El proyecto utiliza Python 3 y la librería Biopython. Se recomienda utilizar el
    pip install -r requirements.txt
    ```
 
-## Ejercicio 1: Procesamiento de secuencias
+## Ejecución de los scripts
 
-El script `Ex1.py` toma un archivo GenBank con el ARN mensajero maduro, calcula la traducción en los seis marcos de lectura posibles, tres en la hebra directa y tres en la hebra reversa complementaria, identifica los marcos abiertos de lectura iniciados en metionina y genera un archivo FASTA con las secuencias resultantes.
+Todos los scripts tienen las rutas de entrada y salida definidas directamente en el código para ejecutarse sin argumentos adicionales.
 
-### Ejecución básica
+### Ejercicio 1: Procesamiento de secuencias y detección del ORF
 
 ```bash
 python Ex1.py
 ```
 
-Por defecto lee el archivo `data/inputs/NM_000513.gbk` y escribe los marcos candidatos en `data/outputs/Ex1_orfs.fas`.
+- **Entrada.** `data/inputs/NM_000513.gbk`.
+- **Salidas.** `data/outputs/Ex1_orfs.fas` con el mayor ORF de cada uno de los seis marcos de lectura y `data/outputs/OPN1MW_best_orf.fas` con el ORF funcional del **Marco +2** de 364 aminoácidos.
 
-### Opciones disponibles
-
-```bash
-python Ex1.py --help
-```
-
-- `-i`, `--input`: Ruta al archivo GenBank de entrada.
-- `-o`, `--output`: Ruta al archivo FASTA de salida.
-- `-m`, `--min-len`: Longitud mínima en aminoácidos para considerar un ORF, valor por defecto 30.
-- `--best-only`: Exporta únicamente el ORF codificante principal en vez de un candidato por marco.
-
-### Ejemplo exportando solo el marco funcional principal
+### Ejercicio 2: Búsqueda de homología por BLASTP
 
 ```bash
-python Ex1.py --best-only -o data/outputs/OPN1MW_best_orf.fas
+python Ex2.py
 ```
 
-### Interpretación biológica del resultado
+- **Entrada.** `data/outputs/OPN1MW_best_orf.fas`.
+- **Salidas.** `data/outputs/blast.out` en formato texto estándar de `BLASTP 2.16.0+` y `data/outputs/blast.xml` con los 500 hits encontrados en UniProtKB/Swiss-Prot.
 
-Al analizar el transcripto maduro de OPN1MW:
+### Ejercicio 3: Alineamiento múltiple de secuencias
 
-1. Los marcos +1 y +3 presentan codones de parada prematuros frecuentes, dejando péptidos máximos de 102 y 87 aminoácidos respectivamente.
-2. Los tres marcos de la hebra reversa complementaria -1, -2 y -3 tampoco albergan secuencias funcionales completas.
-3. El marco +2 contiene un marco abierto de lectura continuo de 364 aminoácidos entre los nucleótidos 83 y 1177, sin codones de parada internos. La traducción coincide al 100% con la proteína de referencia NP_000504.1 del NCBI.
+```bash
+python Ex3.py
+```
+
+- **Entrada.** `data/outputs/OPN1MW_best_orf.fas` más las secuencias homólogas de cinco especies descargadas desde UniProt: *Sciurus carolinensis* `O35478`, *Equus caballus* `O18912`, *Felis catus* `O18913`, *Mus musculus* `O35599` y *Gallus gallus* `P22329`.
+- **Salidas.** `data/outputs/Ex3_secuencias.fas` con las seis secuencias sin alinear, `data/outputs/Ex3_msa.fas` en formato FASTA alineado y `data/outputs/Ex3_msa.txt` con el alineamiento formateado en bloques y símbolos de conservación.
