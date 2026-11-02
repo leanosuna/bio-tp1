@@ -2,7 +2,7 @@
 
 | Estudiante | Legajo |
 | :-- |  :--- |
-| D'antoni, Priscila  | 167.275-7` |
+| D'antoni, Priscila  | 167.275-7 |
 | Da Ruos, Ailén | 169.265-3|
 | Mazzeo, Melina | 146.473-5| 
 | Osuna, Leandro | 167.973-9|
@@ -65,12 +65,7 @@ La consulta arrojó 500 hits significativos en vertebrados. A continuación se r
 | **P22329** | `OPSR_CHICK` | *Gallus gallus*, gallo | 1635 | 634.0 | 0.0 | 83.2% | 90.9% |
 | **Q9W6A7** | `OPSR1_DANRE` | *Danio rerio*, pez cebra | 1541 | 597.0 | 0.0 | 77.7% | 87.6% |
 
-### Significado de los valores estadísticos
 
-- **Score bruto.** Es el puntaje acumulado del alineamiento calculado sumando los valores que asigna la matriz de sustitución `BLOSUM62` a cada par de aminoácidos alineados y restando las penalizaciones por apertura y extensión de huecos. Depende directamente de la longitud de la secuencia y de la matriz elegida.
-- **Bit-score.** Es el puntaje bruto normalizado mediante parámetros estadísticos propios de la matriz y del sistema de puntuación. Al estar expresado en unidades de información llamadas bits, independiza el resultado de la escala de la matriz y sirve para comparar directamente alineamientos hechos con distintas configuraciones.
-- **E-value.** Representa el número esperado de alineamientos con un puntaje igual o mayor al obtenido que se encontrarían por simple azar en una base de datos del mismo tamaño. Cuanto más cercano a cero es el E-value, mayor es la certeza estadística de que las secuencias comparten un origen evolutivo común. Un valor de `0.0` indica un E-value inferior a $10^{-180}$, por lo que la homología es estadísticamente indiscutible.
-- **Porcentaje de identidad y positivos.** La identidad indica qué fracción de las columnas alineadas presenta exactamente el mismo aminoácido en ambas secuencias. El porcentaje de positivos agrega a las coincidencias exactas aquellas sustituciones conservativas donde un aminoácido cambia por otro de propiedades fisicoquímicas equivalentes, como tamaño, carga o hidrofobicidad, lo que preserva el plegamiento tridimensional de la proteína.
 
 ## Conclusión de los resultados de BLAST
 
