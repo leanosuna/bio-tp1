@@ -1,26 +1,28 @@
-# Informe de avance: Trabajo práctico 1 de bioinformática
+# Informe de avance: TP 1 Parte 1 Bioinformática
 
-**Alumno:** Leandro Osuna  
-**Correo:** losuna@frba.utn.edu.ar  
-**Materia:** Introducción a la Bioinformática, UTN FRBA  
+| Estudiante | Legajo |
+| :-- |  :--- |
+| D'antoni, Priscila  | 167.275-7` |
+| Da Ruos, Ailén | 169.265-3|
+| Mazzeo, Melina | 146.473-5| 
+| Osuna, Leandro | 167.973-9|
 
+ 
 ---
 
 ## 1. Selección de patología y gen en OMIM
 
-Para el desarrollo del trabajo práctico se seleccionó el **daltonismo parcial deutan**, registrado en la base de datos Online Mendelian Inheritance in Man bajo la entrada **OMIM 303800**. Esta condición hereditaria ligada al cromosoma X afecta la percepción del eje cromático rojo-verde por ausencia o alteración funcional del fotopigmento de los conos sensibles a longitudes de onda medias, conocidos como conos verdes.
+Para el desarrollo del trabajo práctico se seleccionó el **daltonismo parcial deutan**, cuyo código es **OMIM 303800**. Esta condición hereditaria ligada al cromosoma X afecta la percepción del eje cromático rojo-verde por ausencia o alteración funcional de los conos verdes, responsables de longitudes de onda medias.
 
-A partir de la ficha de OMIM 303800 se identificó el gen responsable **OPN1MW**, ubicado en el brazo largo del cromosoma X en la región Xq28. Desde la base de datos NCBI Nucleotide se descargó el transcripto maduro de referencia **NM_000513.2** en formato GenBank, almacenado en `data/inputs/NM_000513.gbk`. Se eligió el ARN mensajero maduro porque ya atravesó el proceso de corte y empalme y carece de intrones, lo que permite traducir de forma continua la región codificante de la proteína. La secuencia tiene una longitud total de 1998 pares de bases.
+Se identificó el gen responsable **OPN1MW**, ubicado en el brazo largo del cromosoma X en la región Xq28. Desde la base de datos NCBI Nucleotide se descargó el transcripto maduro de referencia **NM_000513.2** en formato GenBank. Se eligió el ARN mensajero maduro porque ya atravesó el proceso de corte y empalme y carece de intrones, lo que permite traducir de forma continua la región codificante de la proteína. La secuencia tiene una longitud total de 1998 pares de bases.
 
 ---
 
 ## 2. Ejercicio 1: Procesamiento de secuencias y detección del ORF
 
-### Qué se hizo y por qué
 
-Al recibir una secuencia de nucleótidos sin conocer a priori dónde comienza la traducción, existen seis marcos de lectura posibles: tres en la hebra directa desplazando el punto de partida en cero, uno o dos nucleótidos, denominados marcos +1, +2 y +3, y tres equivalentes sobre la hebra reversa complementaria, denominados marcos -1, -2 y -3.
 
-Se implementó el script `Ex1.py` utilizando Biopython para leer el archivo `data/inputs/NM_000513.gbk`, generar las seis traducciones completas y localizar en cada marco el mayor marco abierto de lectura, definido como la secuencia continua más larga de aminoácidos que inicia en un codón de metionina `M` y termina antes de un codón de parada `*`. El script exporta el candidato más largo de cada marco en `data/outputs/Ex1_orfs.fas` y guarda el marco funcional principal en `data/outputs/OPN1MW_best_orf.fas`.
+Se implementó el script `Ex1.py` utilizando Biopython para leer el archivo, generar las seis traducciones completas y localizar en cada marco el mayor marco abierto de lectura, definido como la secuencia continua más larga de aminoácidos que inicia en un codón de metionina `M` y termina antes de un codón de parada `*`. El script exporta el candidato más largo de cada marco y guarda el marco funcional principal.
 
 ### Resultados obtenidos
 
@@ -41,9 +43,8 @@ El marco de lectura codificante real es el **Marco +2**, que se extiende entre l
 
 ## 3. Ejercicio 2: Búsqueda por BLASTP e interpretación estadística
 
-### Qué se hizo y por qué
 
-Se desarrolló el script `Ex2.py` para ejecutar una búsqueda `blastp` remota enviando el ORF funcional de 364 aminoácidos contra la base de datos curada **UniProtKB/Swiss-Prot**. Se utilizó Swiss-Prot porque contiene secuencias proteicas revisadas manualmente y anotadas con precisión experimental. La búsqueda empleó la matriz de sustitución `BLOSUM62` con penalización de 11 por apertura de gap y 1 por extensión. El reporte completo se guardó en `data/outputs/blast.out` y `data/outputs/blast.xml`.
+Se desarrolló el script `Ex2.py` para ejecutar una búsqueda blastp remota enviando el ORF funcional de 364 aminoácidos contra la base de datos curada **UniProtKB/Swiss-Prot**. Se utilizó Swiss-Prot porque contiene secuencias proteicas revisadas manualmente y anotadas con precisión experimental. La búsqueda empleó la matriz de sustitución `BLOSUM62` con penalización de 11 por apertura de gap y 1 por extensión.
 
 ### Resultados principales en Swiss-Prot
 
@@ -71,17 +72,14 @@ La consulta arrojó 500 hits significativos en vertebrados. A continuación se r
 - **E-value.** Representa el número esperado de alineamientos con un puntaje igual o mayor al obtenido que se encontrarían por simple azar en una base de datos del mismo tamaño. Cuanto más cercano a cero es el E-value, mayor es la certeza estadística de que las secuencias comparten un origen evolutivo común. Un valor de `0.0` indica un E-value inferior a $10^{-180}$, por lo que la homología es estadísticamente indiscutible.
 - **Porcentaje de identidad y positivos.** La identidad indica qué fracción de las columnas alineadas presenta exactamente el mismo aminoácido en ambas secuencias. El porcentaje de positivos agrega a las coincidencias exactas aquellas sustituciones conservativas donde un aminoácido cambia por otro de propiedades fisicoquímicas equivalentes, como tamaño, carga o hidrofobicidad, lo que preserva el plegamiento tridimensional de la proteína.
 
-### Interpretación biológica del resultado de BLAST
+## Conclusión de los resultados de BLAST
 
-1. **Confirmación de la proteína de consulta.** El primer hit `P04001` corresponde a `OPSG_HUMAN` con 100.0% de identidad sobre los 364 residuos, confirmando que el Marco +2 codifica la opsina humana sensible a ondas medias.
-2. **Parálogo humano y base genética del daltonismo.** El hit `P04000` corresponde a `OPSR_HUMAN`, la opsina humana sensible a ondas largas o pigmento del cono rojo, codificada por el gen vecino `OPN1LW`. Presenta un **96.4% de identidad** y un **98.1% de positivos** con `OPN1MW`, diferenciándose en apenas 13 de los 364 aminoácidos. Esta similitud extrema entre dos genes dispuestos uno al lado del otro en el cromosoma Xq28 explica por qué el daltonismo rojo-verde es tan frecuente en humanos: durante el entrecruzamiento meiótico se producen emparejamientos desiguales que eliminan el gen `OPN1MW` o generan genes híbridos entre el cono rojo y el cono verde.
-3. **Conservación evolutiva en vertebrados.** Los hits siguientes corresponden a opsinas ortólogas de ondas medias y largas en primates, roedores, carnívoros, ungulados, aves, anfibios y peces teleósteos. Incluso frente a vertebrados distantes como el gallo `Gallus gallus` o el pez cebra `Danio rerio`, la similitud positiva supera el 87% y el E-value se mantiene en `0.0`.
+El resultado de `BLASTP` confirma que la secuencia del Marco +2 es la opsina humana de ondas medias `P04001`, con un 100% de identidad, un Score de 1944, un Bit-score de 753.4 y un E-value de `0.0`. Como el E-value mide la probabilidad de encontrar un alineamiento igual por simple azar y acá vale cero, queda demostrado que las secuencias encontradas comparten un origen evolutivo real. El dato más llamativo es el hit `P04000`, que corresponde a la opsina del cono rojo humano `OPN1LW` y tiene un 96.4% de identidad con nuestra secuencia. Que ambos genes sean casi idénticos y estén pegados en el cromosoma X explica por qué ocurre el daltonismo: durante la meiosis es muy fácil que se recombinen mal o se pierda el gen `OPN1MW`. En el resto de las especies animales, la identidad baja un poco pero el porcentaje de positivos sigue por encima del 87% porque la mayoría de los cambios son sustituciones conservativas entre aminoácidos parecidos que no alteran la función de la proteína.
+
 
 ---
 
 ## 4. Ejercicio 3: Alineamiento múltiple de secuencias
-
-### Qué se hizo y por qué
 
 Se implementó el script `Ex3.py` para descargar automáticamente desde UniProt las secuencias completas en formato FASTA de cinco especies distintas presentes en los resultados del BLAST:
 
@@ -158,11 +156,6 @@ Gallus_gallus_P22329         SSVSPA
                               *****
 ```
 
-### Interpretación del alineamiento múltiple
+## Conclusión del alineamiento múltiple
 
-1. **Alto grado de conservación global.** De las 366 columnas del alineamiento entre cinco órdenes de mamíferos y un ave, **272 posiciones son 100% idénticas**, lo que representa un **74.3% de identidad estricta** tras más de 300 millones de años de divergencia evolutiva entre mamíferos y aves.
-2. **Región N-terminal variable.** Las diferencias de longitud y la menor similitud se ubican en los primeros 25 residuos del extremo N-terminal extracelular, donde el ratón carece de los primeros 5 aminoácidos y el gallo presenta una deleción de 2 residuos. Esta cola extracelular no participa en el bolsillo de unión al cromóforo y tolera inserciones y deleciones sin afectar la función del receptor.
-3. **Conservación de las siete hélices transmembrana y residuos catalíticos.** A partir del motivo `GPFEGPNYHIAPRWVY` en la posición 36, la arquitectura de siete hélices alfa transmembrana típica de los receptores acoplados a proteína G se conserva casi sin alteraciones:
-   - En el tercer dominio transmembrana aparece conservado en las seis especies el bloque `WSLAIISWERW`, que contiene el motivo catalítico `ERW` responsable de activar la proteína G transducina al absorber un fotón.
-   - En los bucles extracelulares se conservan las cisteínas `C126` y `C203` dentro del bloque `KTSCGPDVFS`, que forman un puente disulfuro indispensable para la estabilidad estructural de la opsina.
-   - En la séptima hélice transmembrana se mantiene intacto el bloque `FAKSATIYNPVIYVFMNRQFR` en todas las especies analizadas. La lisina `K312` de ese segmento es el sitio activo exacto donde se enlaza covalentemente el cromóforo 11-cis-retinal mediante una base de Schiff protonada, mientras que el motivo `NPxxY` controla el cambio conformacional hacia el estado activo del fotorreceptor.
+El alineamiento múltiple entre las seis especies es consistente porque muestra un 74.3% de posiciones totalmente idénticas y bloques largos sin huecos que corresponden a los dominios funcionales de la proteína. Para proteínas con la misma estructura, los pocos gaps aparecen únicamente en los extremos de la secuencia, sobre todo en los primeros aminoácidos del ratón y del gallo, mientras que la zona central donde están las hélices transmembrana y el sitio de unión al retinal se mantiene conservada sin interrupciones a lo largo de la evolución.
